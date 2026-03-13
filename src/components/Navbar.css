@@ -1,0 +1,44 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: var(--gold);
+  border-bottom: 2px solid var(--purple);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-link {
+  font-family: 'VT323', monospace;
+  font-size: 1.25rem;
+  color: var(--purple);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: var(--purple-light);
+}
+
+.nav-link-active {
+  text-decoration-thickness: 2px;
+  color: var(--dark);
+}
+
+.nav-links-left,
+.nav-links-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-center {
+  font-family: 'VT323', monospace;
+  font-size: 1.25rem;
+  color: var(--purple);
+  letter-spacing: 1px;
+}

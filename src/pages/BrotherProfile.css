@@ -1,0 +1,251 @@
+.profile-page {
+  min-height: 100vh;
+  background: var(--gold);
+  padding-bottom: 100px;
+}
+
+.profile-not-found {
+  max-width: 600px;
+  margin: 100px auto;
+  text-align: center;
+}
+
+.profile-nav {
+  padding: 24px 48px;
+}
+
+.profile-back-link {
+  font-family: 'VT323', monospace;
+  font-size: 1.15rem;
+  color: var(--purple);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+
+.profile-back-link:hover {
+  color: var(--purple-light);
+}
+
+/* ── Header ─────────────────────────────────────────── */
+
+.profile-header {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px 48px 48px;
+  border-bottom: 2px solid var(--purple);
+}
+
+.profile-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.profile-badge {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  padding: 3px 12px;
+  border: 2px solid var(--purple);
+}
+
+.badge-class {
+  background: var(--cream);
+  color: var(--purple);
+}
+
+.badge-founder {
+  background: var(--purple);
+  color: var(--gold);
+}
+
+.badge-role {
+  background: var(--purple-light);
+  color: var(--cream);
+}
+
+.profile-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(1.1rem, 3vw, 1.8rem);
+  color: var(--purple);
+  text-shadow: 3px 3px 0 var(--gold-dark);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.profile-initiation {
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  color: var(--purple-light);
+  letter-spacing: 1px;
+}
+
+/* ── Body ────────────────────────────────────────────── */
+
+.profile-body {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 48px 0;
+}
+
+.profile-section {
+  margin-bottom: 48px;
+}
+
+.profile-section-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.65rem;
+  color: var(--purple);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-count {
+  background: var(--purple);
+  color: var(--gold);
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  padding: 0 8px;
+  border-radius: 2px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0 48px;
+}
+
+/* ── Lineage chain ───────────────────────────────────── */
+
+.lineage-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 24px;
+  background: var(--cream);
+  border: 2px solid var(--purple);
+  font-family: 'VT323', monospace;
+  font-size: 1.25rem;
+}
+
+.lineage-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lineage-arrow {
+  color: var(--purple-light);
+  font-size: 1rem;
+}
+
+.lineage-self {
+  color: var(--purple);
+  font-weight: bold;
+  background: var(--purple);
+  color: var(--gold);
+  padding: 2px 10px;
+}
+
+/* ── Brother cards ───────────────────────────────────── */
+
+.profile-brother-card {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(63, 43, 126, 0.15);
+  font-size: 1.25rem;
+}
+
+.profile-brother-card:last-child {
+  border-bottom: none;
+}
+
+.profile-brother-class {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  color: var(--purple-light);
+}
+
+.profile-little-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-empty {
+  font-family: 'VT323', monospace;
+  font-size: 1.15rem;
+  color: var(--purple-light);
+  opacity: 0.7;
+}
+
+/* ── Info list ───────────────────────────────────────── */
+
+.profile-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.profile-info-row {
+  display: flex;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(63, 43, 126, 0.15);
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+}
+
+.profile-info-row:last-child {
+  border-bottom: none;
+}
+
+.profile-info-row dt {
+  color: var(--purple-light);
+  min-width: 110px;
+}
+
+.profile-info-row dd {
+  color: var(--purple);
+  font-weight: bold;
+  margin: 0;
+}
+
+/* ── Bio ─────────────────────────────────────────────── */
+
+.profile-bio-section {
+  border-top: 2px solid rgba(63, 43, 126, 0.2);
+  padding-top: 40px;
+}
+
+.profile-bio {
+  font-family: 'VT323', monospace;
+  font-size: 1.25rem;
+  color: var(--dark);
+  line-height: 1.7;
+  max-width: 640px;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .profile-header,
+  .profile-body,
+  .profile-nav {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}

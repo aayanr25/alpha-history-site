@@ -1,0 +1,96 @@
+.family-tree-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 56px); /* subtract navbar height */
+  background: var(--gold);
+  overflow: hidden;
+}
+
+/* ── Header ─────────────────────────────────────────── */
+
+.tree-header {
+  flex-shrink: 0;
+  padding: 14px 40px 12px;
+  border-bottom: 2px solid var(--purple);
+  display: flex;
+  align-items: baseline;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.tree-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: var(--purple);
+  text-shadow: 2px 2px 0 var(--gold-dark);
+}
+
+.tree-subtitle {
+  font-family: 'VT323', monospace;
+  font-size: 1.15rem;
+  color: var(--purple-light);
+  letter-spacing: 1px;
+}
+
+/* ── Canvas ──────────────────────────────────────────── */
+
+.tree-canvas-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.tree-canvas-wrap:active {
+  cursor: grabbing;
+}
+
+/* ── Controls ────────────────────────────────────────── */
+
+.tree-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+.tree-ctrl-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+  background: var(--cream);
+  color: var(--purple);
+  border: 2px solid var(--purple);
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  box-shadow: 2px 2px 0 var(--purple);
+}
+
+.tree-ctrl-btn:hover {
+  background: var(--purple);
+  color: var(--gold);
+}
+
+.tree-ctrl-reset {
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+}
+
+/* ── Tree node hover ─────────────────────────────────── */
+
+.tree-node {
+  cursor: pointer;
+  outline: none;
+}
+
+.tree-node rect:nth-child(2) {
+  transition: filter 0.15s;
+}
+
+.tree-node:hover rect:nth-child(2),
+.tree-node:focus rect:nth-child(2) {
+  filter: brightness(0.92);
+}

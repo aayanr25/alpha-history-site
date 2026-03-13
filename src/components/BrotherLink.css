@@ -1,0 +1,11 @@
+.brother-link {
+  font-family: 'VT323', monospace;
+  color: var(--purple);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+
+.brother-link:hover {
+  color: var(--purple-light);
+}

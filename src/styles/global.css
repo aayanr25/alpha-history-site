@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+:root {
+  --gold: #cfa151;
+  --gold-light: #e8c47a;
+  --gold-dark: #a67d3d;
+  --purple: #3f2b7e;
+  --purple-light: #5a3fa0;
+  --cream: #f5e6c8;
+  --dark: #1a1a1a;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--gold);
+  color: var(--purple);
+  font-family: 'VT323', monospace;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--purple);
+  color: var(--gold);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--gold-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--purple);
+  border-radius: 4px;
+}

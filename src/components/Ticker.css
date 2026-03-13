@@ -1,0 +1,35 @@
+.ticker-wrap {
+  background: var(--purple);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 8px 0;
+  border-bottom: 2px solid var(--gold-dark);
+}
+
+.ticker-track {
+  display: inline-block;
+  animation: ticker-scroll 30s linear infinite;
+}
+
+.ticker-item {
+  font-family: 'VT323', monospace;
+  font-size: 1.15rem;
+  color: var(--gold);
+  letter-spacing: 1px;
+  padding: 0 4px;
+}
+
+.ticker-separator {
+  color: var(--gold-light);
+  margin: 0 12px;
+  font-size: 0.9rem;
+}
+
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
