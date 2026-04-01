@@ -94,3 +94,19 @@
 .tree-node:focus rect:nth-child(2) {
   filter: brightness(0.92);
 }
+
+/* ── Loading / error states ──────────────────────────── */
+
+.tree-state-msg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: 'VT323', monospace;
+  font-size: 1.5rem;
+  color: var(--purple);
+}
+
+.tree-state-error {
+  color: #c0392b;
+}

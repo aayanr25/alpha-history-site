@@ -1,0 +1,101 @@
+.edit-profile-wrap {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--cream);
+  border: 2px solid var(--purple);
+  border-radius: 4px;
+}
+
+.edit-profile-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.85rem;
+  color: var(--purple);
+  margin: 0 0 1.75rem;
+  letter-spacing: 0.05em;
+}
+
+.edit-profile-loading,
+.edit-profile-notice {
+  font-family: 'VT323', monospace;
+  font-size: 1.25rem;
+  color: var(--purple);
+  text-align: center;
+}
+
+.edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.edit-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem;
+  color: var(--purple);
+  letter-spacing: 0.04em;
+}
+
+.edit-input {
+  font-family: 'VT323', monospace;
+  font-size: 1.15rem;
+  color: var(--dark);
+  background: #fff;
+  border: 2px solid var(--purple);
+  border-radius: 2px;
+  padding: 0.5rem 0.65rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.edit-input:focus {
+  border-color: var(--gold);
+}
+
+.edit-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.edit-error {
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  color: #c0392b;
+  margin: 0;
+}
+
+.edit-success {
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  color: #27ae60;
+  margin: 0;
+}
+
+.edit-submit {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.65rem;
+  background: var(--purple);
+  color: var(--gold);
+  border: none;
+  border-radius: 2px;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, color 0.15s;
+  align-self: flex-start;
+}
+
+.edit-submit:hover:not(:disabled) {
+  background: var(--purple-light);
+}
+
+.edit-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

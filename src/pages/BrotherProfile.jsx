@@ -1,9 +1,9 @@
 import { useParams, Link } from 'react-router-dom'
-import brothers from '../data/brothers.json'
+import { useBrothers } from '../hooks/useBrothers'
 import BrotherLink from '../components/BrotherLink'
 import './BrotherProfile.css'
 
-function getAncestors(brother) {
+function getAncestors(brother, brothers) {
   const chain = []
   let current = brother
   while (current.bigBrotherId) {
@@ -17,6 +17,29 @@ function getAncestors(brother) {
 
 export default function BrotherProfile() {
   const { id } = useParams()
+  const { brothers, loading, error } = useBrothers()
+
+  if (loading) {
+    return (
+      <div className="profile-page">
+        <div className="profile-not-found">
+          <p className="profile-loading">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="profile-page">
+        <div className="profile-not-found">
+          <p className="profile-error">Failed to load data: {error}</p>
+          <Link to="/family-tree" className="profile-back-link">← Back to Family Tree</Link>
+        </div>
+      </div>
+    )
+  }
+
   const brother = brothers.find(b => b.id === id)
 
   if (!brother) {
@@ -34,8 +57,11 @@ export default function BrotherProfile() {
   const pledgeClassMates = brothers.filter(
     b => b.pledgeClass === brother.pledgeClass && b.id !== brother.id
   )
-  const ancestors = getAncestors(brother)
+  const ancestors = getAncestors(brother, brothers)
   const isFounder = !brother.bigBrotherId
+  const bigBrother = brother.bigBrotherId
+    ? brothers.find(b => b.id === brother.bigBrotherId)
+    : null
 
   return (
     <div className="profile-page">
@@ -46,12 +72,16 @@ export default function BrotherProfile() {
 
       {/* Header */}
       <div className="profile-header">
+        {brother.profilePhotoUrl && (
+          <img
+            src={brother.profilePhotoUrl}
+            alt={`${brother.firstName} ${brother.lastName}`}
+            className="profile-photo"
+          />
+        )}
         <div className="profile-badges">
           <span className="profile-badge badge-class">{brother.pledgeClass}</span>
           {isFounder && <span className="profile-badge badge-founder">Founding Father</span>}
-          {brother.role && !isFounder && (
-            <span className="profile-badge badge-role">{brother.role}</span>
-          )}
         </div>
         <h1 className="profile-name">
           {brother.firstName} {brother.lastName}
@@ -66,7 +96,7 @@ export default function BrotherProfile() {
           <section className="profile-section">
             <h2 className="profile-section-title">Lineage</h2>
             <div className="lineage-chain">
-              {ancestors.map((anc, i) => (
+              {ancestors.map(anc => (
                 <span key={anc.id} className="lineage-step">
                   <BrotherLink id={anc.id} />
                   <span className="lineage-arrow">→</span>
@@ -89,12 +119,10 @@ export default function BrotherProfile() {
           {/* Big brother */}
           <section className="profile-section">
             <h2 className="profile-section-title">Big Brother</h2>
-            {brother.bigBrotherId ? (
+            {bigBrother ? (
               <div className="profile-brother-card">
-                <BrotherLink id={brother.bigBrotherId} />
-                <span className="profile-brother-class">
-                  {brothers.find(b => b.id === brother.bigBrotherId)?.pledgeClass}
-                </span>
+                <BrotherLink id={bigBrother.id} />
+                <span className="profile-brother-class">{bigBrother.pledgeClass}</span>
               </div>
             ) : (
               <p className="profile-empty">Founding Father — no big</p>
@@ -141,6 +169,18 @@ export default function BrotherProfile() {
                   <dd>{brother.graduationYear}</dd>
                 </div>
               )}
+              {brother.hometown && (
+                <div className="profile-info-row">
+                  <dt>Hometown</dt>
+                  <dd>{brother.hometown}</dd>
+                </div>
+              )}
+              {brother.major && (
+                <div className="profile-info-row">
+                  <dt>Major</dt>
+                  <dd>{brother.major}</dd>
+                </div>
+              )}
             </dl>
           </section>
 
@@ -155,6 +195,54 @@ export default function BrotherProfile() {
                   </li>
                 ))}
               </ul>
+            </section>
+          )}
+
+          {/* Career */}
+          {(brother.employer || brother.jobTitle || brother.industry || brother.currentLocation) && (
+            <section className="profile-section">
+              <h2 className="profile-section-title">Career</h2>
+              <dl className="profile-info-list">
+                {brother.employer && (
+                  <div className="profile-info-row">
+                    <dt>Employer</dt>
+                    <dd>{brother.employer}</dd>
+                  </div>
+                )}
+                {brother.jobTitle && (
+                  <div className="profile-info-row">
+                    <dt>Title</dt>
+                    <dd>{brother.jobTitle}</dd>
+                  </div>
+                )}
+                {brother.industry && (
+                  <div className="profile-info-row">
+                    <dt>Industry</dt>
+                    <dd>{brother.industry}</dd>
+                  </div>
+                )}
+                {brother.currentLocation && (
+                  <div className="profile-info-row">
+                    <dt>Location</dt>
+                    <dd>{brother.currentLocation}</dd>
+                  </div>
+                )}
+                {brother.linkedinUrl && (
+                  <div className="profile-info-row">
+                    <dt>LinkedIn</dt>
+                    <dd>
+                      <a
+                        href={brother.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="profile-link"
+                      >
+                        Profile ↗
+                      </a>
+                    </dd>
+                  </div>
+                )}
+              </dl>
             </section>
           )}
         </div>

@@ -2,14 +2,13 @@ import { useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { hierarchy, tree } from 'd3-hierarchy'
 import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pan-pinch'
-import brothers from '../data/brothers.json'
+import { useBrothers } from '../hooks/useBrothers'
 import './FamilyTree.css'
 
 const NODE_W = 190
 const NODE_H = 64
-const NODE_RX = 2 // border-radius
+const NODE_RX = 2
 
-// Path between parent right-edge → child left-edge
 function linkPath(sx, sy, tx, ty) {
   const midX = (sx + NODE_W / 2 + tx - NODE_W / 2) / 2
   return `M${sx + NODE_W / 2},${sy} C${midX},${sy} ${midX},${ty} ${tx - NODE_W / 2},${ty}`
@@ -28,10 +27,7 @@ function TreeControls() {
   )
 }
 
-export default function FamilyTree() {
-  const navigate = useNavigate()
-
-  // Build children lookup
+function TreeGraph({ brothers, navigate }) {
   const childrenMap = useMemo(() => {
     const map = {}
     brothers.forEach(b => {
@@ -41,11 +37,10 @@ export default function FamilyTree() {
       }
     })
     return map
-  }, [])
+  }, [brothers])
 
-  const founders = useMemo(() => brothers.filter(b => !b.bigBrotherId), [])
+  const founders = useMemo(() => brothers.filter(b => !b.bigBrotherId), [brothers])
 
-  // Compute layout
   const { nodes, links, svgWidth, svgHeight, offsetX, offsetY } = useMemo(() => {
     const virtualRoot = { id: '__root__', firstName: '', lastName: '' }
 
@@ -55,15 +50,12 @@ export default function FamilyTree() {
     }
 
     const root = hierarchy(virtualRoot, getChildren)
-
-    // nodeSize: [vertical gap between siblings, horizontal gap between depths]
     const layout = tree().nodeSize([NODE_H + 40, NODE_W + 80])
     layout(root)
 
     const allNodes = root.descendants().filter(d => d.data.id !== '__root__')
     const allLinks = root.links().filter(l => l.source.data.id !== '__root__')
 
-    // Bounds (d3 tree: .x = breadth = our Y, .y = depth = our X)
     const xs = allNodes.map(n => n.y)
     const ys = allNodes.map(n => n.x)
 
@@ -83,7 +75,131 @@ export default function FamilyTree() {
     }
   }, [childrenMap, founders])
 
+  return (
+    <TransformWrapper
+      initialScale={0.85}
+      minScale={0.25}
+      maxScale={2.5}
+      limitToBounds={false}
+      centerOnInit
+    >
+      <>
+        <TreeControls />
+        <TransformComponent
+          wrapperStyle={{ width: '100%', height: '100%' }}
+          contentStyle={{ width: svgWidth, height: svgHeight }}
+        >
+          <svg
+            width={svgWidth}
+            height={svgHeight}
+            style={{ display: 'block', overflow: 'visible' }}
+          >
+            <g>
+              {links.map((link, i) => {
+                const sx = link.source.y + offsetX
+                const sy = link.source.x + offsetY
+                const tx = link.target.y + offsetX
+                const ty = link.target.x + offsetY
+                return (
+                  <path
+                    key={i}
+                    d={linkPath(sx, sy, tx, ty)}
+                    fill="none"
+                    stroke="var(--purple)"
+                    strokeOpacity={0.3}
+                    strokeWidth={2}
+                  />
+                )
+              })}
+            </g>
+            <g>
+              {nodes.map(node => {
+                const cx = node.y + offsetX
+                const cy = node.x + offsetY
+                const x = cx - NODE_W / 2
+                const y = cy - NODE_H / 2
+                const isFounder = !node.data.bigBrotherId
+
+                return (
+                  <g
+                    key={node.data.id}
+                    onClick={() => navigate(`/brothers/${node.data.id}`)}
+                    className="tree-node"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={e => e.key === 'Enter' && navigate(`/brothers/${node.data.id}`)}
+                  >
+                    <rect
+                      x={x + 4} y={y + 4}
+                      width={NODE_W} height={NODE_H}
+                      rx={NODE_RX}
+                      fill="var(--purple)" opacity={0.2}
+                    />
+                    <rect
+                      x={x} y={y}
+                      width={NODE_W} height={NODE_H}
+                      rx={NODE_RX}
+                      fill={isFounder ? 'var(--purple)' : 'var(--cream)'}
+                      stroke="var(--purple)"
+                      strokeWidth={2}
+                    />
+                    {isFounder && (
+                      <rect
+                        x={x} y={y}
+                        width={NODE_W} height={6}
+                        rx={NODE_RX}
+                        fill="var(--gold)"
+                      />
+                    )}
+                    <text
+                      x={cx} y={y + (isFounder ? 30 : 24)}
+                      textAnchor="middle"
+                      fontFamily="'VT323', monospace"
+                      fontSize="17"
+                      fill={isFounder ? 'var(--gold)' : 'var(--purple)'}
+                    >
+                      {node.data.firstName} {node.data.lastName}
+                    </text>
+                    <text
+                      x={cx} y={y + (isFounder ? 48 : 42)}
+                      textAnchor="middle"
+                      fontFamily="'VT323', monospace"
+                      fontSize="13"
+                      fill={isFounder ? 'var(--gold-light)' : 'var(--purple-light)'}
+                    >
+                      {node.data.pledgeClass}
+                    </text>
+                    <text
+                      x={x + NODE_W - 8} y={y + 14}
+                      textAnchor="end"
+                      fontFamily="'VT323', monospace"
+                      fontSize="11"
+                      fill={isFounder ? 'var(--gold-dark)' : 'var(--purple-light)'}
+                      opacity={0.7}
+                    >
+                      #{node.data.initiationNumber}
+                    </text>
+                  </g>
+                )
+              })}
+            </g>
+          </svg>
+        </TransformComponent>
+      </>
+    </TransformWrapper>
+  )
+}
+
+export default function FamilyTree() {
+  const navigate = useNavigate()
+  const { brothers, loading, error } = useBrothers()
   const wrapRef = useRef(null)
+
+  // Only show brothers who have at least one little
+  const brothersWithLittles = useMemo(() => {
+    const hasLittles = new Set(brothers.map(b => b.bigBrotherId).filter(Boolean))
+    return brothers.filter(b => b.bigBrotherId || hasLittles.has(b.id))
+  }, [brothers])
 
   return (
     <div className="family-tree-page">
@@ -95,138 +211,20 @@ export default function FamilyTree() {
       </div>
 
       <div className="tree-canvas-wrap" ref={wrapRef}>
-        <TransformWrapper
-          initialScale={0.85}
-          minScale={0.25}
-          maxScale={2.5}
-          limitToBounds={false}
-          centerOnInit
-        >
-          <>
-            <TreeControls />
-            <TransformComponent
-              wrapperStyle={{ width: '100%', height: '100%' }}
-              contentStyle={{ width: svgWidth, height: svgHeight }}
-            >
-              <svg
-                width={svgWidth}
-                height={svgHeight}
-                style={{ display: 'block', overflow: 'visible' }}
-              >
-                {/* Links */}
-                <g>
-                  {links.map((link, i) => {
-                    const sx = link.source.y + offsetX
-                    const sy = link.source.x + offsetY
-                    const tx = link.target.y + offsetX
-                    const ty = link.target.x + offsetY
-                    return (
-                      <path
-                        key={i}
-                        d={linkPath(sx, sy, tx, ty)}
-                        fill="none"
-                        stroke="var(--purple)"
-                        strokeOpacity={0.3}
-                        strokeWidth={2}
-                      />
-                    )
-                  })}
-                </g>
-
-                {/* Nodes */}
-                <g>
-                  {nodes.map(node => {
-                    const cx = node.y + offsetX
-                    const cy = node.x + offsetY
-                    const x = cx - NODE_W / 2
-                    const y = cy - NODE_H / 2
-                    const isFounder = !node.data.bigBrotherId
-
-                    return (
-                      <g
-                        key={node.data.id}
-                        onClick={() => navigate(`/brothers/${node.data.id}`)}
-                        className="tree-node"
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={e => e.key === 'Enter' && navigate(`/brothers/${node.data.id}`)}
-                      >
-                        {/* Shadow */}
-                        <rect
-                          x={x + 4}
-                          y={y + 4}
-                          width={NODE_W}
-                          height={NODE_H}
-                          rx={NODE_RX}
-                          fill="var(--purple)"
-                          opacity={0.2}
-                        />
-                        {/* Card */}
-                        <rect
-                          x={x}
-                          y={y}
-                          width={NODE_W}
-                          height={NODE_H}
-                          rx={NODE_RX}
-                          fill={isFounder ? 'var(--purple)' : 'var(--cream)'}
-                          stroke="var(--purple)"
-                          strokeWidth={2}
-                        />
-                        {/* Founder accent bar */}
-                        {isFounder && (
-                          <rect
-                            x={x}
-                            y={y}
-                            width={NODE_W}
-                            height={6}
-                            rx={NODE_RX}
-                            fill="var(--gold)"
-                          />
-                        )}
-                        {/* Name */}
-                        <text
-                          x={cx}
-                          y={y + (isFounder ? 30 : 24)}
-                          textAnchor="middle"
-                          fontFamily="'VT323', monospace"
-                          fontSize="17"
-                          fill={isFounder ? 'var(--gold)' : 'var(--purple)'}
-                        >
-                          {node.data.firstName} {node.data.lastName}
-                        </text>
-                        {/* Pledge class */}
-                        <text
-                          x={cx}
-                          y={y + (isFounder ? 48 : 42)}
-                          textAnchor="middle"
-                          fontFamily="'VT323', monospace"
-                          fontSize="13"
-                          fill={isFounder ? 'var(--gold-light)' : 'var(--purple-light)'}
-                        >
-                          {node.data.pledgeClass}
-                        </text>
-                        {/* Initiation number badge */}
-                        <text
-                          x={x + NODE_W - 8}
-                          y={y + 14}
-                          textAnchor="end"
-                          fontFamily="'VT323', monospace"
-                          fontSize="11"
-                          fill={isFounder ? 'var(--gold-dark)' : 'var(--purple-light)'}
-                          opacity={0.7}
-                        >
-                          #{node.data.initiationNumber}
-                        </text>
-                      </g>
-                    )
-                  })}
-                </g>
-              </svg>
-            </TransformComponent>
-          </>
-        </TransformWrapper>
+        {loading && (
+          <div className="tree-state-msg">
+            <p>Loading...</p>
+          </div>
+        )}
+        {error && (
+          <div className="tree-state-msg tree-state-error">
+            <p>Failed to load family tree: {error}</p>
+          </div>
+        )}
+        {!loading && !error && brothers.length > 0 && (
+          <TreeGraph brothers={brothersWithLittles} navigate={navigate} />
+        )}
       </div>
-
     </div>
   )
 }

@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
-import brothers from '../data/brothers.json'
+import { useBrothers } from '../hooks/useBrothers'
 import './BrotherLink.css'
 
 export default function BrotherLink({ id }) {
+  const { brothers } = useBrothers()
   const brother = brothers.find(b => b.id === id)
   if (!brother) return null
   return (
