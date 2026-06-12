@@ -3,12 +3,12 @@ import { useBrothers } from '../hooks/useBrothers'
 import './BrotherLink.css'
 
 export default function BrotherLink({ id }) {
-  const { brothers } = useBrothers()
-  const brother = brothers.find(b => b.id === id)
+  const { brothersByNumber } = useBrothers()
+  const brother = brothersByNumber.get(Number(id))
   if (!brother) return null
   return (
     <Link to={`/brothers/${id}`} className="brother-link">
-      {brother.firstName} {brother.lastName}
+      {brother.first_name} {brother.last_name}
     </Link>
   )
 }

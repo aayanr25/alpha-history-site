@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(curl -s --max-time 20 \"https://aet-notion-worker.secretary-purduechipsi.workers.dev/api/profiles\")"
     ]
   }
 }

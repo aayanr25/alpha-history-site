@@ -261,6 +261,18 @@
   display: block;
 }
 
+.profile-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--purple);
+  color: var(--gold);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
 /* ── External link ───────────────────────────────────── */
 
 .profile-link {

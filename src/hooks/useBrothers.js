@@ -1,48 +1,46 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
 
-// Map Supabase snake_case columns to camelCase for component compatibility
-function normalize(row) {
-  return {
-    id: row.id,
-    firstName: row.first_name,
-    lastName: row.last_name,
-    pledgeClass: row.pledge_class,
-    initiationNumber: row.initiation_number,
-    graduationYear: row.graduation_year,
-    bigBrotherId: row.big_brother_id,
-    bio: row.bio,
-    profilePhotoUrl: row.profile_photo_url,
-    hometown: row.hometown,
-    major: row.major,
-    employer: row.employer,
-    jobTitle: row.job_title,
-    industry: row.industry,
-    linkedinUrl: row.linkedin_url,
-    currentLocation: row.current_location,
-    userId: row.user_id,
-  }
-}
+// Single source of truth for member data. The Cloudflare Worker proxies the
+// chapter's Notion database and returns an array of profile objects shaped like:
+//   { initiation_number, first_name, last_name, nickname, pledge_class,
+//     graduation_year, major, hometown, big_initiation_number, roles, bio,
+//     photo_url }
+// `big_initiation_number` points at another profile's `initiation_number`
+// (null for founders); `photo_url` is a full URL or null.
+const PROFILES_URL =
+  'https://aet-notion-worker.secretary-purduechipsi.workers.dev/api/profiles'
 
-// Module-level cache so data is fetched once per page load
-// and shared across all components without a context provider
+// Module-level cache so the data is fetched once per page load and shared
+// across every component — navigating between pages does not re-fetch.
 let brothersCache = null
+let byNumberCache = null
 let fetchPromise = null
+
+function buildByNumber(list) {
+  const map = new Map()
+  for (const b of list) {
+    map.set(b.initiation_number, b)
+  }
+  return map
+}
 
 function fetchBrothers() {
   if (!fetchPromise) {
-    fetchPromise = supabase
-      .from('brothers')
-      .select('*')
-      .order('initiation_number')
-      .then(({ data, error }) => {
-        if (error) {
-          // Reset so retries are possible after failures
-          fetchPromise = null
-          throw error
-        }
-        brothersCache = data.map(normalize)
-        return brothersCache
+    fetchPromise = fetch(PROFILES_URL)
+      .then(res => {
+        if (!res.ok) throw new Error(`Request failed (${res.status})`)
+        return res.json()
+      })
+      .then(data => {
+        const list = Array.isArray(data) ? data : []
+        brothersCache = list
+        byNumberCache = buildByNumber(list)
+        return list
+      })
+      .catch(err => {
+        // Reset so a later mount can retry after a failure.
+        fetchPromise = null
+        throw err
       })
   }
   return fetchPromise
@@ -74,11 +72,18 @@ export function useBrothers() {
     return () => { cancelled = true }
   }, [])
 
-  return { brothers, loading, error }
+  // O(1) lookups by initiation_number. Reuse the cached map once data has
+  // loaded; otherwise derive one from whatever is in state.
+  const brothersByNumber = byNumberCache ?? buildByNumber(brothers)
+
+  return { brothers, brothersByNumber, loading, error }
 }
 
-export function useBrother(id) {
-  const { brothers, loading, error } = useBrothers()
-  const brother = id ? brothers.find(b => b.id === id) ?? null : null
+export function useBrother(initiationNumber) {
+  const { brothersByNumber, loading, error } = useBrothers()
+  const brother =
+    initiationNumber != null
+      ? brothersByNumber.get(Number(initiationNumber)) ?? null
+      : null
   return { brother, loading, error }
 }

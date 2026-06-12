@@ -31,30 +31,30 @@ function TreeGraph({ brothers, navigate }) {
   const childrenMap = useMemo(() => {
     const map = {}
     brothers.forEach(b => {
-      if (b.bigBrotherId) {
-        if (!map[b.bigBrotherId]) map[b.bigBrotherId] = []
-        map[b.bigBrotherId].push(b)
+      if (b.big_initiation_number) {
+        if (!map[b.big_initiation_number]) map[b.big_initiation_number] = []
+        map[b.big_initiation_number].push(b)
       }
     })
     return map
   }, [brothers])
 
-  const founders = useMemo(() => brothers.filter(b => !b.bigBrotherId), [brothers])
+  const founders = useMemo(() => brothers.filter(b => !b.big_initiation_number), [brothers])
 
   const { nodes, links, svgWidth, svgHeight, offsetX, offsetY } = useMemo(() => {
-    const virtualRoot = { id: '__root__', firstName: '', lastName: '' }
+    const virtualRoot = { initiation_number: '__root__', first_name: '', last_name: '' }
 
     const getChildren = node => {
-      if (node.id === '__root__') return founders
-      return childrenMap[node.id] || null
+      if (node.initiation_number === '__root__') return founders
+      return childrenMap[node.initiation_number] || null
     }
 
     const root = hierarchy(virtualRoot, getChildren)
     const layout = tree().nodeSize([NODE_H + 40, NODE_W + 80])
     layout(root)
 
-    const allNodes = root.descendants().filter(d => d.data.id !== '__root__')
-    const allLinks = root.links().filter(l => l.source.data.id !== '__root__')
+    const allNodes = root.descendants().filter(d => d.data.initiation_number !== '__root__')
+    const allLinks = root.links().filter(l => l.source.data.initiation_number !== '__root__')
 
     const xs = allNodes.map(n => n.y)
     const ys = allNodes.map(n => n.x)
@@ -118,16 +118,16 @@ function TreeGraph({ brothers, navigate }) {
                 const cy = node.x + offsetY
                 const x = cx - NODE_W / 2
                 const y = cy - NODE_H / 2
-                const isFounder = !node.data.bigBrotherId
+                const isFounder = !node.data.big_initiation_number
 
                 return (
                   <g
-                    key={node.data.id}
-                    onClick={() => navigate(`/brothers/${node.data.id}`)}
+                    key={node.data.initiation_number}
+                    onClick={() => navigate(`/brothers/${node.data.initiation_number}`)}
                     className="tree-node"
                     role="button"
                     tabIndex={0}
-                    onKeyDown={e => e.key === 'Enter' && navigate(`/brothers/${node.data.id}`)}
+                    onKeyDown={e => e.key === 'Enter' && navigate(`/brothers/${node.data.initiation_number}`)}
                   >
                     <rect
                       x={x + 4} y={y + 4}
@@ -158,7 +158,7 @@ function TreeGraph({ brothers, navigate }) {
                       fontSize="17"
                       fill={isFounder ? 'var(--gold)' : 'var(--purple)'}
                     >
-                      {node.data.firstName} {node.data.lastName}
+                      {node.data.first_name} {node.data.last_name}
                     </text>
                     <text
                       x={cx} y={y + (isFounder ? 48 : 42)}
@@ -167,7 +167,7 @@ function TreeGraph({ brothers, navigate }) {
                       fontSize="13"
                       fill={isFounder ? 'var(--gold-light)' : 'var(--purple-light)'}
                     >
-                      {node.data.pledgeClass}
+                      {node.data.pledge_class}
                     </text>
                     <text
                       x={x + NODE_W - 8} y={y + 14}
@@ -177,7 +177,7 @@ function TreeGraph({ brothers, navigate }) {
                       fill={isFounder ? 'var(--gold-dark)' : 'var(--purple-light)'}
                       opacity={0.7}
                     >
-                      #{node.data.initiationNumber}
+                      #{node.data.initiation_number}
                     </text>
                   </g>
                 )
@@ -197,8 +197,8 @@ export default function FamilyTree() {
 
   // Only show brothers who have at least one little
   const brothersWithLittles = useMemo(() => {
-    const hasLittles = new Set(brothers.map(b => b.bigBrotherId).filter(Boolean))
-    return brothers.filter(b => b.bigBrotherId || hasLittles.has(b.id))
+    const hasLittles = new Set(brothers.map(b => b.big_initiation_number).filter(Boolean))
+    return brothers.filter(b => b.big_initiation_number || hasLittles.has(b.initiation_number))
   }, [brothers])
 
   return (
@@ -218,7 +218,7 @@ export default function FamilyTree() {
         )}
         {error && (
           <div className="tree-state-msg tree-state-error">
-            <p>Failed to load family tree: {error}</p>
+            <p>Could not load member data. Please try again.</p>
           </div>
         )}
         {!loading && !error && brothers.length > 0 && (
