@@ -10,7 +10,6 @@ export default function Hero() {
         2. Update the src to: /images/your-image.jpg
       */}
       <div className="hero-image-placeholder">
-        <span className="placeholder-text">[ your photo here ]</span>
       </div>
 
       <div className="hero-overlay">

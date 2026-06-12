@@ -24,15 +24,38 @@ function buildByNumber(list) {
   return map
 }
 
+// Photos live in a Google Drive folder named by initiation number and are
+// served through the site's own /api/photos Pages Function. Fetching them is
+// best-effort: if the endpoint is missing (e.g. plain `vite dev`) or fails, the
+// brothers still load and fall back to their Sheet photo_url, then to initials.
+function fetchPhotoMap() {
+  return fetch('/api/photos')
+    .then(res => (res.ok ? res.json() : []))
+    .then(list => {
+      const map = new Map()
+      for (const p of Array.isArray(list) ? list : []) {
+        map.set(p.initiation_number, p.url)
+      }
+      return map
+    })
+    .catch(() => new Map())
+}
+
 function fetchBrothers() {
   if (!fetchPromise) {
-    fetchPromise = fetch(PROFILES_URL)
-      .then(res => {
-        if (!res.ok) throw new Error(`Request failed (${res.status})`)
-        return res.json()
-      })
-      .then(data => {
-        const list = Array.isArray(data) ? data : []
+    const profilesPromise = fetch(PROFILES_URL).then(res => {
+      if (!res.ok) throw new Error(`Request failed (${res.status})`)
+      return res.json()
+    })
+
+    fetchPromise = Promise.all([profilesPromise, fetchPhotoMap()])
+      .then(([data, photoMap]) => {
+        const list = (Array.isArray(data) ? data : []).map(b => ({
+          ...b,
+          // Prefer a photo from the Drive folder; fall back to the Sheet's
+          // photo_url, then to null (which renders an initials placeholder).
+          photo_url: photoMap.get(b.initiation_number) ?? b.photo_url ?? null,
+        }))
         brothersCache = list
         byNumberCache = buildByNumber(list)
         return list

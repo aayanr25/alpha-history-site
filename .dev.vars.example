@@ -1,0 +1,15 @@
+# Copy this file to ".dev.vars" and fill in real values for local testing with
+# `wrangler pages dev`. In production, set these same names in
+# Cloudflare Pages → Settings → Environment variables instead.
+#
+# .dev.vars is gitignored — never commit your real key.
+
+# A Google Drive API key with the Drive API enabled.
+GOOGLE_DRIVE_API_KEY=your-drive-api-key-here
+
+# The Drive folder ID that holds the brother photos (named [initiation_number].jpg).
+# It's the part of the folder URL after ".../folders/".
+PHOTOS_FOLDER_ID=your-folder-id-here
+
+# The shared chapter passcode that unlocks the site (the entry gate).
+BROTHERS_PASSCODE=your-passcode-here

@@ -67,8 +67,30 @@ export default function BrotherProfile() {
     ? brothersByNumber.get(brother.big_initiation_number)
     : null
 
+  const qFlag = brother.initiation_number === 78
+
+  const mNode = brother.photo_url ? (
+    <img
+      src={brother.photo_url}
+      alt={`${brother.first_name} ${brother.last_name}`}
+      className="profile-photo"
+    />
+  ) : (
+    <div className="profile-photo profile-photo-placeholder" aria-hidden="true">
+      {initials(brother)}
+    </div>
+  )
+
   return (
     <div className="profile-page">
+      {qFlag && (
+        <div className="pf-g">
+          <div className="pf-n pf-n1">the inventor of this wonderful website</div>
+          <div className="pf-n pf-n2">I never sleep, cuz sleep is the cousin of death</div>
+          <div className="pf-n pf-n3">Long live asap rocky</div>
+        </div>
+      )}
+
       {/* Back link */}
       <div className="profile-nav">
         <Link to="/family-tree" className="profile-back-link">← Family Tree</Link>
@@ -76,16 +98,13 @@ export default function BrotherProfile() {
 
       {/* Header */}
       <div className="profile-header">
-        {brother.photo_url ? (
-          <img
-            src={brother.photo_url}
-            alt={`${brother.first_name} ${brother.last_name}`}
-            className="profile-photo"
-          />
-        ) : (
-          <div className="profile-photo profile-photo-placeholder" aria-hidden="true">
-            {initials(brother)}
+        {qFlag ? (
+          <div className="pf-r">
+            {mNode}
+            <span className="pf-a1">GOAT Secretary</span>
           </div>
+        ) : (
+          mNode
         )}
         <div className="profile-badges">
           <span className="profile-badge badge-class">{brother.pledge_class}</span>
