@@ -4,6 +4,7 @@ import './Navbar.css'
 const links = [
   { to: '/', label: 'Home', exact: true },
   { to: '/timeline', label: 'Timeline' },
+  { to: '/brothers', label: 'Brothers' },
   { to: '/family-tree', label: 'Family Tree' },
 ]
 

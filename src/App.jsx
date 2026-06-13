@@ -6,6 +6,7 @@ import Hero from './components/Hero'
 import Timeline from './pages/Timeline'
 import BrotherProfile from './pages/BrotherProfile'
 import FamilyTree from './pages/FamilyTree'
+import Brothers from './pages/Brothers'
 
 function Home() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/timeline" element={<Timeline />} />
             <Route path="/family-tree" element={<FamilyTree />} />
+            <Route path="/brothers" element={<Brothers />} />
             <Route path="/brothers/:id" element={<BrotherProfile />} />
           </Routes>
         </div>

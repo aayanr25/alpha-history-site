@@ -93,7 +93,7 @@ export default function BrotherProfile() {
 
       {/* Back link */}
       <div className="profile-nav">
-        <Link to="/family-tree" className="profile-back-link">← Family Tree</Link>
+        <Link to="/brothers" className="profile-back-link">← Brothers</Link>
       </div>
 
       {/* Header */}
@@ -174,7 +174,7 @@ export default function BrotherProfile() {
                 ))}
               </ul>
             ) : (
-              <p className="profile-empty">No littles yet</p>
+              <p className="profile-empty">No littles</p>
             )}
           </section>
 
@@ -206,6 +206,12 @@ export default function BrotherProfile() {
                 <div className="profile-info-row">
                   <dt>Major</dt>
                   <dd>{brother.major}</dd>
+                </div>
+              )}
+              {brother.roles && (
+                <div className="profile-info-row">
+                  <dt>Roles</dt>
+                  <dd>{Array.isArray(brother.roles) ? brother.roles.join(', ') : brother.roles}</dd>
                 </div>
               )}
             </dl>

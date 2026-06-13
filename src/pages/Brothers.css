@@ -1,0 +1,200 @@
+.brothers-page {
+  min-height: 100vh;
+  background: var(--gold);
+  padding: 40px 24px 100px;
+}
+
+/* Top row: search pinned left, title/subtitle aligned at the same height. */
+.brothers-top {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.brothers-header {
+  flex: 1;
+  text-align: center;
+  /* Offset by the search column width so the title stays page-centered. */
+  margin-right: 320px;
+}
+
+@media (max-width: 640px) {
+  .brothers-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .brothers-header {
+    margin-right: 0;
+  }
+}
+
+.brothers-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  color: var(--purple);
+  text-shadow: 2px 2px 0 var(--gold-dark);
+  margin: 0 0 12px;
+}
+
+.brothers-subtitle {
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  color: var(--purple-light);
+  margin: 0;
+}
+
+/* ── Search ──────────────────────────────────────────── */
+
+.brothers-search {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  flex-shrink: 0;
+  text-align: left;
+}
+
+.brothers-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  background: var(--cream);
+  color: var(--purple);
+  font-family: 'VT323', monospace;
+  font-size: 1.25rem;
+  border: 2px solid var(--purple);
+  border-radius: 2px;
+}
+
+.brothers-search-input::placeholder {
+  color: var(--purple-light);
+  opacity: 0.7;
+}
+
+.brothers-search-input:focus {
+  outline: none;
+  box-shadow: 3px 4px 0 var(--gold-dark);
+}
+
+.brothers-suggestions {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--cream);
+  border: 2px solid var(--purple);
+  border-radius: 2px;
+  box-shadow: 4px 6px 14px rgba(26, 26, 26, 0.3);
+  overflow: hidden;
+}
+
+.brothers-suggestion {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--gold-dark);
+  cursor: pointer;
+  text-align: left;
+  font-family: 'VT323', monospace;
+}
+
+.brothers-suggestions li:last-child .brothers-suggestion {
+  border-bottom: none;
+}
+
+.brothers-suggestion:hover,
+.brothers-suggestion:focus-visible {
+  background: var(--gold-light);
+  outline: none;
+}
+
+.brothers-suggestion-name {
+  color: var(--purple);
+  font-size: 1.2rem;
+}
+
+.brothers-suggestion-meta {
+  flex-shrink: 0;
+  color: var(--purple-light);
+  font-size: 1rem;
+}
+
+.brothers-state-msg {
+  text-align: center;
+  font-family: 'VT323', monospace;
+  font-size: 1.3rem;
+  color: var(--purple);
+}
+
+.brothers-state-error {
+  color: var(--purple-dark, #2a1d57);
+}
+
+/* Makeshift composite — a dense grid of equal thumbnails. */
+.brothers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 8px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.brothers-thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  border: 2px solid var(--purple);
+  border-radius: 2px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.brothers-thumb:hover,
+.brothers-thumb:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 3px 4px 10px rgba(26, 26, 26, 0.35);
+  z-index: 1;
+}
+
+.brothers-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.brothers-thumb-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--purple);
+  color: var(--gold);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.brothers-thumb-rank {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 1px 5px;
+  background: var(--purple);
+  color: var(--gold);
+  font-family: 'VT323', monospace;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  border-top-left-radius: 2px;
+}
