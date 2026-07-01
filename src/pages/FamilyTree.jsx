@@ -41,7 +41,7 @@ function TreeGraph({ brothers, navigate }) {
 
   const founders = useMemo(() => brothers.filter(b => !b.big_initiation_number), [brothers])
 
-  const { nodes, links, svgWidth, svgHeight, offsetX, offsetY } = useMemo(() => {
+  const { nodes, links, treeWidth, svgWidth, svgHeight, offsetX, offsetY } = useMemo(() => {
     const virtualRoot = { initiation_number: '__root__', first_name: '', last_name: '' }
 
     const getChildren = node => {
@@ -65,13 +65,28 @@ function TreeGraph({ brothers, navigate }) {
     const minY = Math.min(...ys) - NODE_H / 2 - pad
     const maxY = Math.max(...ys) + NODE_H / 2 + pad
 
+    const treeWidth = maxX - minX
+    const treeHeight = maxY - minY
+
+    // Wide pan margin around the tree. Combined with limitToBounds on the
+    // TransformWrapper, this caps how far the tree can be dragged: panning stops
+    // once only ~one node (box) is left at the viewport edge, instead of letting
+    // users scroll off into an endless empty void. The margin is sized as one
+    // viewport minus one node, so the far edge lands right as a single box
+    // remains in view. Falls back to sane sizes when there's no window (SSR).
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 1200
+    const vh = typeof window !== 'undefined' ? window.innerHeight : 800
+    const marginX = Math.max(200, vw - NODE_W)
+    const marginY = Math.max(200, vh - NODE_H)
+
     return {
       nodes: allNodes,
       links: allLinks,
-      svgWidth: maxX - minX,
-      svgHeight: maxY - minY,
-      offsetX: -minX,
-      offsetY: -minY,
+      treeWidth,
+      svgWidth: treeWidth + marginX * 2,
+      svgHeight: treeHeight + marginY * 2,
+      offsetX: -minX + marginX,
+      offsetY: -minY + marginY,
     }
   }, [childrenMap, founders])
 
@@ -79,16 +94,16 @@ function TreeGraph({ brothers, navigate }) {
   // isn't dropped mid-tree; desktop keeps the roomier default.
   const initialScale = useMemo(() => {
     if (typeof window === 'undefined' || window.innerWidth > 640) return 0.85
-    const fit = (window.innerWidth - 24) / svgWidth
+    const fit = (window.innerWidth - 24) / treeWidth
     return Math.max(0.3, Math.min(0.85, fit))
-  }, [svgWidth])
+  }, [treeWidth])
 
   return (
     <TransformWrapper
       initialScale={initialScale}
       minScale={0.2}
       maxScale={2.5}
-      limitToBounds={false}
+      limitToBounds={true}
       centerOnInit
     >
       <>
