@@ -64,7 +64,7 @@ export default function PasscodeGate({ children }) {
     <div className="gate-page">
       <div className="gate-card">
         <h1 className="gate-title">Alpha Epsilon Tau</h1>
-        <p className="gate-subtitle">Enter the chapter passcode to continue</p>
+        <p className="gate-subtitle">Enter the Alpha passcode to continue</p>
 
         <form className="gate-form" onSubmit={handleSubmit}>
           <input
