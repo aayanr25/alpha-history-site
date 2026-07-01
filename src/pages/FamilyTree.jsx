@@ -75,10 +75,18 @@ function TreeGraph({ brothers, navigate }) {
     }
   }, [childrenMap, founders])
 
+  // On phones, start zoomed out enough to fit the tree's width on screen so it
+  // isn't dropped mid-tree; desktop keeps the roomier default.
+  const initialScale = useMemo(() => {
+    if (typeof window === 'undefined' || window.innerWidth > 640) return 0.85
+    const fit = (window.innerWidth - 24) / svgWidth
+    return Math.max(0.3, Math.min(0.85, fit))
+  }, [svgWidth])
+
   return (
     <TransformWrapper
-      initialScale={0.85}
-      minScale={0.25}
+      initialScale={initialScale}
+      minScale={0.2}
       maxScale={2.5}
       limitToBounds={false}
       centerOnInit
@@ -206,7 +214,7 @@ export default function FamilyTree() {
       <div className="tree-header">
         <h1 className="tree-title">Family Tree</h1>
         <p className="tree-subtitle">
-          Drag to pan · Scroll to zoom · Click any box to view profile
+          Drag to pan · Pinch or scroll to zoom · Tap any box to view profile
         </p>
       </div>
 

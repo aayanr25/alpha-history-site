@@ -2,6 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  min-height: var(--nav-h);
   padding: 12px 24px;
   background: var(--gold);
   border-bottom: 2px solid var(--purple);
@@ -41,4 +43,45 @@
   font-size: 1.25rem;
   color: var(--purple);
   letter-spacing: 1px;
+  text-align: center;
+}
+
+/* ── Tablet: drop the centre tagline so the links keep breathing room ── */
+@media (max-width: 860px) {
+  .nav-center {
+    display: none;
+  }
+
+  .navbar {
+    justify-content: space-between;
+  }
+}
+
+/* ── Phone: compact single row, tighter type/gaps so every link fits ── */
+@media (max-width: 520px) {
+  .navbar {
+    padding: 8px 14px;
+    gap: 8px;
+  }
+
+  .nav-links-left,
+  .nav-links-right {
+    gap: 12px;
+  }
+
+  .nav-link {
+    font-size: 1.05rem;
+    text-underline-offset: 2px;
+  }
+}
+
+@media (max-width: 360px) {
+  .nav-link {
+    font-size: 0.95rem;
+  }
+
+  .nav-links-left,
+  .nav-links-right {
+    gap: 9px;
+  }
 }

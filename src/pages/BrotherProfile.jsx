@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { useBrothers } from '../hooks/useBrothers'
 import BrotherLink from '../components/BrotherLink'
+import Fireworks from '../components/Fireworks'
 import './BrotherProfile.css'
 
 function getAncestors(brother, brothersByNumber) {
@@ -83,9 +84,11 @@ export default function BrotherProfile() {
 
   return (
     <div className="profile-page">
+      {qFlag && <Fireworks key={brother.initiation_number} />}
+
       {qFlag && (
         <div className="pf-g">
-          <div className="pf-n pf-n1">the inventor of this wonderful website</div>
+          <div className="pf-n pf-n1">the creator of this wonderful website</div>
           <div className="pf-n pf-n2">I never sleep, cuz sleep is the cousin of death</div>
           <div className="pf-n pf-n3">Long live asap rocky</div>
         </div>

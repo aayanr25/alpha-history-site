@@ -4,7 +4,9 @@
       "Bash(npm run:*)",
       "Bash(curl -s --max-time 20 \"https://aet-notion-worker.secretary-purduechipsi.workers.dev/api/profiles\")",
       "Bash(npx eslint *)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5173/api/timeline)",
+      "Bash(curl -s http://localhost:5173/api/timeline)"
     ]
   }
 }

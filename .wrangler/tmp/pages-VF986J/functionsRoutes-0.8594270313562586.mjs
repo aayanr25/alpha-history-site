@@ -2,6 +2,7 @@ import { onRequestOptions as __api_verify_passcode_js_onRequestOptions } from "/
 import { onRequestPost as __api_verify_passcode_js_onRequestPost } from "/Users/aayanr/dev/alpha-history-site/functions/api/verify-passcode.js"
 import { onRequest as __api_image_js_onRequest } from "/Users/aayanr/dev/alpha-history-site/functions/api/image.js"
 import { onRequest as __api_photos_js_onRequest } from "/Users/aayanr/dev/alpha-history-site/functions/api/photos.js"
+import { onRequest as __api_timeline_js_onRequest } from "/Users/aayanr/dev/alpha-history-site/functions/api/timeline.js"
 
 export const routes = [
     {
@@ -31,5 +32,12 @@ export const routes = [
       method: "",
       middlewares: [],
       modules: [__api_photos_js_onRequest],
+    },
+  {
+      routePath: "/api/timeline",
+      mountPath: "/api",
+      method: "",
+      middlewares: [],
+      modules: [__api_timeline_js_onRequest],
     },
   ]

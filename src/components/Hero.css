@@ -2,6 +2,7 @@
   position: relative;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,6 +71,18 @@
   line-height: 1.5;
   opacity: 0.85;
   animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+@media (max-width: 640px) {
+  .hero-overlay {
+    padding: 24px;
+  }
+
+  .placeholder-text {
+    bottom: 16px;
+    right: 16px;
+    font-size: 1.1rem;
+  }
 }
 
 @keyframes fadeInUp {

@@ -1,7 +1,11 @@
 .family-tree-page {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 56px); /* subtract navbar height */
+  /* Fill the viewport below the navbar. dvh tracks mobile browser chrome
+     (address bar showing/hiding) so the tree never gets cut off or leaves a
+     gap; vh is the fallback for older browsers. */
+  height: calc(100vh - var(--nav-h));
+  height: calc(100dvh - var(--nav-h));
   background: var(--gold);
   overflow: hidden;
 }
@@ -39,6 +43,9 @@
   position: relative;
   overflow: hidden;
   cursor: grab;
+  /* Let the pan/pinch library own all touch gestures inside the canvas so the
+     browser doesn't try to scroll or page-zoom while you're moving the tree. */
+  touch-action: none;
 }
 
 .tree-canvas-wrap:active {
@@ -77,6 +84,44 @@
 .tree-ctrl-reset {
   font-size: 0.55rem;
   letter-spacing: 1px;
+}
+
+/* ── Mobile: bigger, thumb-reachable controls + tighter header ──────── */
+@media (max-width: 640px) {
+  .tree-header {
+    padding: 10px 18px;
+    gap: 6px 18px;
+  }
+
+  .tree-subtitle {
+    font-size: 1rem;
+  }
+
+  .tree-controls {
+    top: auto;
+    bottom: 16px;
+    right: 14px;
+    gap: 8px;
+  }
+
+  .tree-ctrl-btn {
+    /* Comfortable ~44px touch targets. */
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 0.85rem;
+    padding: 10px 12px;
+  }
+
+  .tree-ctrl-reset {
+    font-size: 0.6rem;
+  }
+}
+
+/* On touch devices the hover-darken never clears, so drive it from :active. */
+@media (hover: none) {
+  .tree-node:active rect:nth-child(2) {
+    filter: brightness(0.9);
+  }
 }
 
 /* ── Tree node hover ─────────────────────────────────── */

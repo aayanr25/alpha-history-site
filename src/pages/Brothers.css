@@ -20,13 +20,29 @@
 }
 
 @media (max-width: 640px) {
+  .brothers-page {
+    padding: 24px 16px 80px;
+  }
+
   .brothers-top {
     flex-direction: column;
     align-items: stretch;
+    gap: 16px;
+    margin-bottom: 24px;
   }
 
   .brothers-header {
     margin-right: 0;
+  }
+
+  /* Keep the search full-width instead of capping at 320px on a phone. */
+  .brothers-search {
+    max-width: none;
+  }
+
+  .brothers-grid {
+    grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+    gap: 6px;
   }
 }
 

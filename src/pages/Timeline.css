@@ -132,6 +132,31 @@
   opacity: 0.85;
 }
 
+.timeline-author {
+  margin-top: 12px;
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  color: var(--purple);
+  letter-spacing: 1px;
+  opacity: 0.55;
+}
+
+/* ── Loading / error / empty state ───────────────────── */
+
+.timeline-state-msg {
+  text-align: center;
+  font-family: 'VT323', monospace;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  color: var(--purple);
+  padding: 40px 24px;
+}
+
+.timeline-state-error {
+  color: var(--purple);
+  opacity: 0.8;
+}
+
 /* ── Responsive: stack on small screens ─────────────── */
 
 @media (max-width: 640px) {

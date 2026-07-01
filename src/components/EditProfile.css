@@ -7,6 +7,18 @@
   border-radius: 4px;
 }
 
+@media (max-width: 640px) {
+  .edit-profile-wrap {
+    margin: 1rem;
+    padding: 1.25rem;
+  }
+
+  .edit-submit {
+    align-self: stretch;
+    text-align: center;
+  }
+}
+
 .edit-profile-title {
   font-family: 'Press Start 2P', monospace;
   font-size: 0.85rem;

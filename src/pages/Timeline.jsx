@@ -1,70 +1,46 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './Timeline.css'
 
-const events = [
-  {
-    date: 'Fall 2022',
-    title: 'The Beginning',
-    description:
-      'Placeholder — describe the founding vision, the first conversations, and the people who set things in motion.',
-  },
-  {
-    date: 'Spring 2023',
-    title: 'Early Milestones',
-    description:
-      'Placeholder — early recruitment, first meetings, and the group beginning to take shape.',
-  },
-  {
-    date: 'Summer 2023',
-    title: 'Building the Foundation',
-    description:
-      'Placeholder — off-season growth, planning sessions, and the groundwork laid for the year ahead.',
-  },
-  {
-    date: 'Fall 2023',
-    title: 'A New Chapter',
-    description:
-      'Placeholder — a pivotal semester with new members, events, and momentum carrying the organization forward.',
-  },
-  {
-    date: 'Spring 2024',
-    title: 'Expanding the Brotherhood',
-    description:
-      'Placeholder — notable events, new initiatives, and the brotherhood continuing to grow in size and character.',
-  },
-  {
-    date: 'Summer 2024',
-    title: 'Between the Semesters',
-    description:
-      'Placeholder — summer activities, alumni connections, and preparation for the year to come.',
-  },
-  {
-    date: 'Fall 2024',
-    title: 'Strengthening Bonds',
-    description:
-      'Placeholder — another semester of service, scholarship, and brotherhood setting the tone.',
-  },
-  {
-    date: 'Spring 2025',
-    title: 'Continuing the Legacy',
-    description:
-      "Placeholder — highlights from the semester that continued to define Alpha Epsilon Tau's character.",
-  },
-  {
-    date: 'Fall 2025',
-    title: 'Rising Higher',
-    description:
-      'Placeholder — a landmark semester with events, leadership changes, and growth worth remembering.',
-  },
-  {
-    date: 'Present — Spring 2026',
-    title: 'Today',
-    description:
-      'Placeholder — where things stand right now, and the direction the chapter is headed.',
-  },
-]
-
+// Timeline entries come from a Google Sheet, proxied server-side by the
+// /api/timeline Pages Function (which keeps the Google API key off the browser
+// and returns entries already sorted OLDEST → NEWEST by sort_date). Each entry
+// is shaped like:
+//   { order, date_label, sort_date, title, description, author }
+// `date_label` is what we DISPLAY; `sort_date` drives the ordering; `author`
+// is passed through for a future link to a brother profile page.
 export default function Timeline() {
+  const [events, setEvents] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/timeline')
+      .then(res => {
+        if (!res.ok) throw new Error(`Request failed (${res.status})`)
+        return res.json()
+      })
+      .then(data => {
+        if (cancelled) return
+        // Defensive re-sort in case the endpoint ever returns unsorted data.
+        const list = (Array.isArray(data) ? data : [])
+          .slice()
+          .sort((a, b) => {
+            const ta = Date.parse(a.sort_date)
+            const tb = Date.parse(b.sort_date)
+            return (Number.isNaN(ta) ? Infinity : ta) - (Number.isNaN(tb) ? Infinity : tb)
+          })
+        setEvents(list)
+        setLoading(false)
+      })
+      .catch(err => {
+        if (cancelled) return
+        setError(err.message)
+        setLoading(false)
+      })
+    return () => { cancelled = true }
+  }, [])
+
   return (
     <div className="timeline-page">
       <div className="timeline-header">
@@ -73,21 +49,35 @@ export default function Timeline() {
       </div>
 
       <div className="timeline-container">
-        {events.map((event, index) => (
-          <div
-            key={index}
-            className={`timeline-entry ${index % 2 === 0 ? 'entry-left' : 'entry-right'}`}
-          >
-            <div className="timeline-card">
-              <span className="timeline-date">{event.date}</span>
-              <h2 className="timeline-event-title">{event.title}</h2>
-              <p className="timeline-description">{event.description}</p>
-            </div>
-            <div className="timeline-node" />
-          </div>
-        ))}
+        {loading && <p className="timeline-state-msg">Loading...</p>}
+        {error && (
+          <p className="timeline-state-msg timeline-state-error">
+            Could not load the timeline: {error}
+          </p>
+        )}
+        {!loading && !error && events.length === 0 && (
+          <p className="timeline-state-msg">No timeline entries yet.</p>
+        )}
 
-        <div className="timeline-line" />
+        {!loading && !error &&
+          events.map((event, index) => (
+            <div
+              key={index}
+              className={`timeline-entry ${index % 2 === 0 ? 'entry-left' : 'entry-right'}`}
+            >
+              <div className="timeline-card">
+                <span className="timeline-date">{event.date_label}</span>
+                <h2 className="timeline-event-title">{event.title}</h2>
+                <p className="timeline-description">{event.description}</p>
+                {event.author && (
+                  <p className="timeline-author">by {event.author}</p>
+                )}
+              </div>
+              <div className="timeline-node" />
+            </div>
+          ))}
+
+        {!loading && !error && events.length > 0 && <div className="timeline-line" />}
       </div>
     </div>
   )

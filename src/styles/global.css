@@ -8,6 +8,9 @@
   --purple-light: #5a3fa0;
   --cream: #f5e6c8;
   --dark: #1a1a1a;
+  /* Shared navbar height so full-height pages (e.g. the family tree) can
+     subtract it reliably. Kept in sync with .navbar's min-height. */
+  --nav-h: 56px;
 }
 
 * {
@@ -18,6 +21,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* Stop iOS/Android from auto-inflating our pixel-font sizes on rotate. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -25,6 +31,14 @@ body {
   color: var(--purple);
   font-family: 'VT323', monospace;
   overflow-x: hidden;
+  /* Removes the grey flash when tapping links/buttons on touch devices. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --nav-h: 52px;
+  }
 }
 
 ::selection {

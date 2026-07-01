@@ -4,8 +4,18 @@
 #
 # .dev.vars is gitignored — never commit your real key.
 
-# A Google Drive API key with the Drive API enabled.
-GOOGLE_DRIVE_API_KEY=your-drive-api-key-here
+# A Google API key. Used by /api/photos (Drive API) and /api/timeline (Sheets
+# API) — enable BOTH the "Google Drive API" and the "Google Sheets API" on this
+# key's Cloud project so the one key serves both functions.
+GOOGLE_DRIVE_API_KEY=your-google-api-key-here
+
+# The Google Sheet that holds the history timeline. It's the part of the sheet
+# URL between "/d/" and "/edit". Share the sheet "Anyone with the link → Viewer".
+GOOGLE_SHEET_ID=your-sheet-id-here
+
+# Optional: the A1 range /api/timeline reads. Only set this if your tab isn't
+# named "Timeline". Default when unset: Timeline!A1:F1000
+# TIMELINE_SHEET_RANGE=Timeline!A1:F1000
 
 # The Drive folder ID that holds the brother photos (named [initiation_number].jpg).
 # It's the part of the folder URL after ".../folders/".
